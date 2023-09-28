@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: result
+  name: result
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: result
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: result
+    spec:
+      containers:
+      - image: herraksoy/resultserver
+        name: result
+        ports:
+        - containerPort: 80
+        env:        
+        - name: MYSQL_PASSWORD
+          # value: "Clarusway_1" burayida yine mysql_secret file ile balgadik ücüncü file.
+          valueFrom:
+            secretKeyRef:
+              name: mysqlsecret
+              key: mysql-admin-password
+        envFrom:
+        - configMapRef:
+            name: servers-cm      
+        # - name: MYSQL_USER      buradaki degerleri de servers_configmap.yaml dosyasina bagladik
+        #   value: "clarus"
+        # - name: MYSQL_DATABASE
+        #   value: "phonebook"
+        # - name: MYSQL_DATABASE_HOST
+        #   value: "mysql-deploy.default.svc.cluster.local"                   

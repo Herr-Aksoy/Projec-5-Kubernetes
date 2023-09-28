@@ -1,0 +1,18 @@
+# kubectl expose deploy webserver --port=80 --target-port=80 --dry-run=client -o yaml > webserver-service.yaml
+# komutu ile direk icerikli file olusturmus oluyoruz.
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: webserver
+  name: webserver
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 30001
+  selector:
+    app: webserver
+  type: NodePort
+

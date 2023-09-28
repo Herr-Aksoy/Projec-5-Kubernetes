@@ -1,0 +1,15 @@
+# https://kubernetes.io/docs/concepts/storage/persistent-volumes/#:~:text=Each%20PVC%20contains%20a%20spec%20and%20status%2C%20which%20is%20the%20specification%20and%20status%20of%20the%20claim.
+
+# üsteki dökümantasyondan PersistentVolumeClaim taslagi olan yer.
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi

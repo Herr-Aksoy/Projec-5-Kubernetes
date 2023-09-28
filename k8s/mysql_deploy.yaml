@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mysql-deploy
+  name: mysql-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-deploy
+  template:
+    metadata:
+      labels:
+        app: mysql-deploy
+    spec:
+      volumes:
+      - name: mysql-pv-volume
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
+      containers:
+        - image: 'mysql:5.7'
+          name: mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              # value: R1234r  önceen bu sekildey di secret olusturum sistemi degistiriyoruz
+              valueFrom:
+                secretKeyRef:
+                  name: mysqlsecret
+                  key: mysql-root-password 
+            - name: MYSQL_PASSWORD
+              # value: Clarusway_1 bunuda ayni mantikla secret bagliyoruz
+              valueFrom:
+                secretKeyRef:
+                  name: mysqlsecret
+                  key: mysql-admin-password
+          envFrom:
+            - configMapRef:
+                name: mysql-cm
+            # - name: MYSQL_USER    bu kismi configmap direk cekecegiz. onuda da envFrom seklinde yapiyoruz
+            #   value: clarus
+            # - name: MYSQL_DATABASE
+            #   value: phonebook
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: var/lib/mysql
+              name: mysql-pv-volume

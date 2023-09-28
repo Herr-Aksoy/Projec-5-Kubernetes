@@ -1,0 +1,40 @@
+# kubectl create deploy webserver --image=herraksoy/webserver --dry-run=client -o yaml > webserver-deploy.yaml
+# komutu ile direk file olusuyor. Mükemmel
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: webserver
+  name: webserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webserver
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: webserver
+    spec:
+      containers:
+      - image: herraksoy/webserver
+        name: webserver
+        ports:
+        - containerPort: 80
+        env:        
+        - name: MYSQL_PASSWORD
+          # value: "Clarusway_1" bu kismida mysql_secret ile bagliyoruz. Tek secret iki file ile bagladik
+          valueFrom:
+            secretKeyRef:
+              name: mysqlsecret
+              key: mysql-admin-password
+        envFrom:
+        - configMapRef:
+            name: servers-cm      
+        # - name: MYSQL_USER      bunlar icin servers_configmap.yaml dosyasi hazirladik.
+        #   value: "clarus"
+        # - name: MYSQL_DATABASE
+        #   value: "phonebook"
+        # - name: MYSQL_DATABASE_HOST
+        #   value: "mysql-deploy.default.svc.cluster.local"                   

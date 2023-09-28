@@ -1,0 +1,18 @@
+# https://kubernetes.io/docs/concepts/storage/persistent-volumes/#:~:text=This%20method%20does%20not%20guarantee%20any%20binding%20privileges%20to%20the%20PersistentVolume.
+
+# Üstaraftaki link PersistentVolume dökümantasyonda nasil onun linki. Biz icerisini dolduruyoruz.
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
